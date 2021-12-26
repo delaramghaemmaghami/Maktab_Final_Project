@@ -7,3 +7,24 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
     user_address = models.CharField(max_length=500, blank=True)  # todo: foreign key
+
+
+class Customer(CustomUser):
+    class Meta:
+        proxy = True
+        verbose_name = "مشتری"
+        verbose_name_plural = "مشتریان"
+
+
+class Staff(CustomUser):
+    class Meta:
+        proxy = True
+        verbose_name= "رستوران"
+        verbose_name_plural = 'رستوران ها'
+
+
+class Admin(CustomUser):
+    class Meta:
+        proxy = True
+        verbose_name = 'مدیر'
+        verbose_name_plural = 'مدیران'
