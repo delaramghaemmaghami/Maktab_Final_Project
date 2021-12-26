@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-from accounts.models import Staff
+from accounts.models import Staff, Customer
 
 
 class Restaurant(models.Model):
@@ -48,3 +48,22 @@ class Menu(models.Model):
 
     food = models.ManyToManyField(Food, related_name="food")
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+
+
+class Order(models.Model):
+    status_choices = [
+        ("not paid", "not paid"),
+        ("submitted", "submitted"),
+        ("sent", "sent"),
+        ("delivered", "delivered")
+    ]
+    status = models.CharField(max_length=10, choices=status_choices, default="not paid")
+    total_price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=3)
+    created = models.DateTimeField(auto_now_add=True)
+
+    user = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+
+
+class FoodOrder(models.Model):
+    pass

@@ -2,11 +2,19 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
+class UserAddress(models.Model):
+    city = models.CharField(max_length=100)
+    address = models.CharField(max_length=200)
+
+    def __str__(self):
+        return str(self.id)
+
+
 class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
-    user_address = models.CharField(max_length=500, blank=True)  # todo: foreign key
+    user_address = models.ManyToManyField(UserAddress)
 
 
 class Customer(CustomUser):

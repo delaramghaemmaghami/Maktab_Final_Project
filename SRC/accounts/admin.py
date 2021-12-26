@@ -46,3 +46,6 @@ class AdminProxyAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return Admin.objects.filter(is_superuser=True)
+
+
+admin.site.register(UserAddress)
