@@ -19,12 +19,12 @@ class Customer(CustomUser):
 class Staff(CustomUser):
     class Meta:
         proxy = True
-        verbose_name= "رستوران"
-        verbose_name_plural = 'رستوران ها'
+        verbose_name= "مدیر رستوران"
+        verbose_name_plural = "مدیر های رستوران"
 
 
 class Admin(CustomUser):
     class Meta:
         proxy = True
-        verbose_name = 'مدیر'
-        verbose_name_plural = 'مدیران'
+        verbose_name = "مدیر سایت"
+        verbose_name_plural = "مدیران سایت"
