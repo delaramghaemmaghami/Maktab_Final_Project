@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-from accounts.model import Staff
+from accounts.models import Staff
 
 
 class Restaurant(models.Model):
@@ -44,7 +44,7 @@ class Food(models.Model):
 
 class Menu(models.Model):
     inventory = models.PositiveIntegerField()
-    price = models.DecimalField(validators=[MinValueValidator(0.0)])
+    price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=3)
 
     food = models.ManyToManyField(Food, related_name="food")
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
