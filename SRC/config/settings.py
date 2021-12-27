@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "accounts",
     "restaurant",
-    "customer"
 ]
 
 SITE_ID = 1
