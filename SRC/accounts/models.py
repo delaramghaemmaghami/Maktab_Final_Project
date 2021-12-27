@@ -27,7 +27,7 @@ class Customer(CustomUser):
 class Staff(CustomUser):
     class Meta:
         proxy = True
-        verbose_name= "مدیر رستوران"
+        verbose_name = "مدیر رستوران"
         verbose_name_plural = "مدیر های رستوران"
 
 
