@@ -51,7 +51,7 @@ class Branch(models.Model):
 class Food(models.Model):
     def upload_path(self, file_name: str):
         extention = file_name.split(".")[-1]
-        file_name = f"{str(self.id)}_{self.name}.{extention}"
+        file_name = f"{self.name}.{extention}"
         path = f"food/{str(self.food_restaurant_category.name)}"
         return os.path.join(path, file_name)
 
