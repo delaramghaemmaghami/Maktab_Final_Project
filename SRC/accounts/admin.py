@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 from .forms import *
 from .models import *
 
@@ -25,7 +24,7 @@ class CustomerProxyAdmin(admin.ModelAdmin):
     search_fields = ['username', 'email']
 
     def get_queryset(self, request):
-        return Customer.objects.filter(is_staff=False)
+        return Customer.objects.filter(is_staff=False, is_superuser=False)
 
 
 @admin.register(Staff)

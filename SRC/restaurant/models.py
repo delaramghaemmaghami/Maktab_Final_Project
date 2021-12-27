@@ -52,7 +52,7 @@ class Food(models.Model):
     def upload_path(self, file_name: str):
         extention = file_name.split(".")[-1]
         file_name = f"{self.name}.{extention}"
-        path = f"food/{str(self.food_restaurant_category.name)}"
+        path = "food"
         return os.path.join(path, file_name)
 
     name = models.CharField(max_length=100)
@@ -61,10 +61,13 @@ class Food(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     meal_category = models.ManyToManyField(MealCategory, related_name="meal")
-    food_restaurant_category = models.ForeignKey(FoodRestaurantCategory, on_delete=models.CASCADE)
+    food_restaurant_category = models.ManyToManyField(FoodRestaurantCategory, related_name="food_cat")
 
     def meal_categories(self):
         return "\n ,".join([meal.name for meal in self.meal_category.all()])
+
+    def food_restaurant_categories(self):
+        return "\n ,".join([food_cat.name for food_cat in self.food_restaurant_category.all()])
 
     def __str__(self):
         return self.name
@@ -89,15 +92,23 @@ class Order(models.Model):
         ("تحویل", "تحویل")
     ]
     status = models.CharField(max_length=10, choices=status_choices, default="not paid")
-    total_price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=3)
+    total_price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=3, default=0.0)
     created = models.DateTimeField(auto_now_add=True)
 
     user = models.ForeignKey("accounts.Customer", on_delete=models.CASCADE)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    user_address = models.OneToOneField("accounts.UserAddress", on_delete=models.DO_NOTHING, blank=True)
 
     def __str__(self):
         return f"{self.user} | {self.branch}"
 
 
-class FoodOrder(models.Model):
-    pass
+class MenuOrder(models.Model):
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    number = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=3, default=0.0)
+
+    def __str__(self):
+        return f"{self.menu} | {self.order}"

@@ -3,7 +3,7 @@ from .models import *
 
 
 class FoodAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "food_restaurant_category", "meal_categories"]
+    list_display = ["id", "name", "food_restaurant_categories", "meal_categories"]
     list_display_links = ["name"]
 
     fieldsets = [("CATEGORIES", {'fields': ("food_restaurant_category", "meal_category")}),
@@ -44,7 +44,7 @@ class MealCategoryAdmin(admin.ModelAdmin):
 
 
 class FoodRestaurantCategoryFood(admin.TabularInline):
-    model = Food
+    model = Food.food_restaurant_category.through
 
 
 class FoodRestaurantCategoryAdmin(admin.ModelAdmin):
@@ -71,3 +71,5 @@ admin.site.register(FoodRestaurantCategory, FoodRestaurantCategoryAdmin)
 admin.site.register(Branch, BranchAdmin)
 admin.site.register(Food, FoodAdmin)
 admin.site.register(Menu, MenuAdmin)
+admin.site.register(Order)
+admin.site.register(MenuOrder)
