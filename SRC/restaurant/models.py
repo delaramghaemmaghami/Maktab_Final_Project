@@ -52,7 +52,7 @@ class Food(models.Model):
     def upload_path(self, file_name: str):
         extention = file_name.split(".")[-1]
         file_name = f"{str(self.id)}_{self.name}.{extention}"
-        path = "food"
+        path = f"food/{str(self.food_restaurant_category.name)}"
         return os.path.join(path, file_name)
 
     name = models.CharField(max_length=100)
@@ -71,7 +71,7 @@ class Menu(models.Model):
     inventory = models.PositiveIntegerField()
     price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=3)
 
-    food = models.ManyToManyField(Food, related_name="food")
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
 
     def __str__(self):
