@@ -63,6 +63,9 @@ class Food(models.Model):
     meal_category = models.ManyToManyField(MealCategory, related_name="meal")
     food_restaurant_category = models.ForeignKey(FoodRestaurantCategory, on_delete=models.CASCADE)
 
+    def meal_categories(self):
+        return "\n ,".join([meal.name for meal in self.meal_category.all()])
+
     def __str__(self):
         return self.name
 
