@@ -1,3 +1,5 @@
+import os.path
+
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -47,8 +49,14 @@ class Branch(models.Model):
 
 
 class Food(models.Model):
+    def upload_path(self, file_name: str):
+        extention = file_name.split(".")[-1]
+        file_name = f"{str(self.id)}_{self.name}.{extention}"
+        path = "food"
+        return os.path.join(path, file_name)
+
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to="media/")
+    image = models.ImageField(upload_to=upload_path)
     description = models.TextField(max_length=500)
     created = models.DateTimeField(auto_now_add=True)
 
