@@ -5,7 +5,8 @@
 {% endblock title %}
 
 {% block content %}
-    <h1>Home</h1>
+    <h1 style="color: orangered; font-weight: bold; margin: 20px">Home!</h1>
+    <p style="color: deeppink; margin: 20px">Welcome to deliran online shop! &#128512;</p>
     {% if user.is_authenticated %}
         Hi {{ user.username }}!
         <p><a href="{% url 'account_logout' %}">Log Out</a></p>
