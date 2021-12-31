@@ -1,19 +1,32 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock style %}
+
 {% block title %}
     HOME
 {% endblock title %}
 
 {% block content %}
-    <h1 style="color: orangered; font-weight: bold; margin: 20px">Home!</h1>
-    <p style="color: deeppink; margin: 20px">Welcome to deliran online shop! &#128512;</p>
+    <h1>Home!</h1>
+    <p>Welcome to deliran online shop! &#128512;</p>
     {% if user.is_authenticated %}
-        Hi {{ user.username }}!
-        <p><a href="{% url 'logout' %}">Log Out</a></p>
+        <div class="mymargin">
+            Hi {{ user.username }}!
+            <p><a href="{% url 'logout' %}">Log Out</a></p>
+            <button type="button" class="btn btn-warning">
+                <a href="{% url 'logout' %}">Log Out</a>
+            </button>
+        </div>
     {% else %}
-        <p>You are not logged in</p>
-        <a href="{% url 'login' %}">Log In</a> |
-        <a href="{% url 'customer_signup' %}">Customer Sign Up</a> |
-        <a href="{% url 'staff_signup' %}">Staff Sign Up</a>
+        <div class="mymargin">
+            <p>You are not logged in</p>
+            <a href="{% url 'login' %}" class="btn btn-warning" role="button">Login</a>
+            <a href="{% url 'customer_signup' %}" class="btn btn-success" role="button">Customer Sign Up</a>
+            <a href="{% url 'staff_signup' %}" class="btn btn-success" role="button">Staff Sign Up</a>
+        </div>
     {% endif %}
 {% endblock content %}

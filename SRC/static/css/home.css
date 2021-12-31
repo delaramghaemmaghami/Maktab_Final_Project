@@ -1,0 +1,14 @@
+h1 {
+    color: orangered;
+    font-weight: bold;
+    margin: 20px
+}
+
+p:first-of-type {
+    color: deeppink;
+    margin: 20px
+}
+
+.mymargin {
+    margin: 20px;
+}
