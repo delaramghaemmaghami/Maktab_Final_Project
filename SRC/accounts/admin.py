@@ -4,8 +4,7 @@ from .models import *
 
 
 class CustomUserAdmin(admin.ModelAdmin):
-    add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
+    add_form = CustomerCreationForm
     model = CustomUser
     list_display = ["username", "email", "is_staff", "is_superuser"]
     fieldsets = (
