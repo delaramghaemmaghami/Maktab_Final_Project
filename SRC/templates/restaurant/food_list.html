@@ -27,8 +27,13 @@
 							<h6 class="card-text"><a href="#">{{food.name}}</a></h6>
                             <h6 class="card-text"><img src="{{food.image.url}}"
 													   class="card-img-top"></h6>
-                            <h6 class="card-text">{{food.meal_category}}</h6>
-                            <h6 class="card-text">{{food.food_restaurant_category}}</h6>
+							<h6 class="card-text">
+								{% for fmc in food.meal_category.all %}{{fmc}} ,{% endfor %}
+							</h6>
+							<hr>
+							<h6 class="card-text">
+								{% for frc in food.food_restaurant_category.all %}{{frc}} ,{% endfor %}
+							</h6>
 						  </div>
 						</div>
 					</div>
