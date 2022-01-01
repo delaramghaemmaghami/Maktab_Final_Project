@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static '' %}">
+{% endblock style %}
+
+{% block title %}
+    FOOD RESTAURANT MEAL
+{% endblock title %}
+
+{% block content %}
+	<h1>Food Restaurant Meal</h1>
+	<main class="container my-4">
+		<h3 class="my-4 border-bottom pb-1">Categories</h3>
+		<div class="row">
+			{% if data %}
+				{% for cat in data %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow">
+						  <div class="card-body">
+							<h6 class="card-text"><a href="#">{{cat.name}}</a></h6>
+						  </div>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</main>
+{% endblock content %}

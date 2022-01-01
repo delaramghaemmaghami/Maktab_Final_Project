@@ -13,6 +13,10 @@
 {% block content %}
 	<h1>Foods List</h1>
 	<main class="container my-4">
+		<div>
+			<a href="{% url 'food_restaurant_meal_list' %}" class="btn btn-warning" role="button">Food Restaurant Meal</a>
+			<a href="{% url 'meal_category_list' %}" class="btn btn-warning" role="button">Meal Categories</a>
+		</div>
 		<h3 class="my-4 border-bottom pb-1">Foods</h3>
 		<div class="row">
 			{% if data %}
