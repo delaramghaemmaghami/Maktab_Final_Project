@@ -43,7 +43,6 @@ def meal_category_foods_list(request, meal_category_id):
     return render(request, "restaurant/meal_category_foods_list.html", {"data": data})
 
 
-# 'branch list' according to 'rest'
 def restaurant_branches_list(request, restaurant_id):
     restaurant = Restaurant.objects.get(id=restaurant_id)
     data = Branch.objects.filter(restaurant=restaurant)
@@ -53,3 +52,8 @@ def restaurant_branches_list(request, restaurant_id):
 def food_detail(request, id):
     food = Food.objects.get(id=id)
     return render(request, "restaurant/food_detail.html", {"data": food})
+
+
+def branch_detail(request, id):
+    branch = Branch.objects.get(id=id)
+    return render(request, "restaurant/branch_detail.html", {"data": branch})
