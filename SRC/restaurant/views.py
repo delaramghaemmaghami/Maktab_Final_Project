@@ -54,6 +54,8 @@ def food_detail(request, id):
     return render(request, "restaurant/food_detail.html", {"data": food})
 
 
+# menus based on branches
 def branch_detail(request, id):
     branch = Branch.objects.get(id=id)
-    return render(request, "restaurant/branch_detail.html", {"data": branch})
+    menus = Menu.objects.filter(branch=branch)
+    return render(request, "restaurant/branch_detail.html", {"data": branch, "menus": menus})

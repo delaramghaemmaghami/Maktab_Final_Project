@@ -49,6 +49,24 @@
 			</div>
 		</div>
 		<br>
+		<h4>MENUS</h4>
+			{% if data %}
+				<div  style="display: flex; flex-wrap: wrap;">
+					{% for m in menus %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow">
+						  <div class="card-body">
+							<h6 class="card-text">{{m.branch}}</h6>
+							<h6 class="card-text">{{m.food}}</h6>
+							<h6 class="card-text">{{m.price}}</h6>
+							<h6 class="card-text">{{m.inventory}}</h6>
+						  </div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+		<br>
 		<h4>ADDRESS</h4>
 		<p>{{data.branch_address}}</p>
         <br>
