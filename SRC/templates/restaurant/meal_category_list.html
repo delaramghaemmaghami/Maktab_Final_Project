@@ -14,6 +14,10 @@
 	<h1>Meal Categories List</h1>
 	<main class="container my-4">
 		<h3 class="my-4 border-bottom pb-1">Categories</h3>
+		<div>
+			<a href="{% url 'foods_list' %}" class="btn btn-warning" role="button">Back</a>
+		</div>
+		<br>
 		<div class="row">
 			{% if data %}
 				{% for cat in data %}
