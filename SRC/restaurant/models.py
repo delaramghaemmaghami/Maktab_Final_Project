@@ -36,7 +36,7 @@ class FoodRestaurantCategory(models.Model):
 
 class Branch(models.Model):
     name = models.CharField(max_length=100)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateField(auto_now_add=True)
     is_main = models.BooleanField()
     description = models.TextField(max_length=500)
 

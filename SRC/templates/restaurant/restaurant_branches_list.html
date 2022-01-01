@@ -11,12 +11,13 @@
 {% endblock title %}
 
 {% block content %}
-	<h1>Branches List</h1>
 	<main class="container my-4">
+		<h1>Branches List</h1>
+		<hr>
 		<div>
 			<a href="{% url 'Restaurants_list' %}" class="btn btn-warning" role="button">Back</a>
 		</div>
-		<h3 class="my-4 border-bottom pb-1">Branches</h3>
+		<br>
 		<div class="row">
 			{% if data %}
 				{% for cat in data %}
@@ -24,7 +25,8 @@
 						<div class="card shadow">
 						  <div class="card-body">
 							<h6 class="card-text"><a href="#">{{cat.name}}</a></h6>
-                            <h6 class="card-text">{{cat.created}}</h6>
+							<hr>
+                            <h6 class="card-text">Created: {{cat.created}}</h6>
                             <h6 class="card-text">Is main: {{cat.is_main}}</h6>
 						  </div>
 						</div>

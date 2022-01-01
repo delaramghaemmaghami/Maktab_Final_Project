@@ -18,4 +18,6 @@ urlpatterns = [
 
     path("restaurant-branches-list/<int:restaurant_id>",
          restaurant_branches_list, name="restaurant_branches_list"),
+
+    path("food-detail/<int:id>/", food_detail, name="food-detail")
 ]

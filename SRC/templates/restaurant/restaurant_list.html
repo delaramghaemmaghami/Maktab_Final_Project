@@ -11,12 +11,13 @@
 {% endblock title %}
 
 {% block content %}
-	<h1>Restaurants List</h1>
 	<main class="container my-4">
+		<h1>Restaurants List</h1>
+		<hr>
 		<div>
 			<a href="{% url 'branches_list' %}" class="btn btn-warning" role="button">Branches List</a>
 		</div>
-		<h3 class="my-4 border-bottom pb-1">Restaurants</h3>
+		<br>
 		<div class="row">
 			{% if data %}
 				{% for cat in data %}

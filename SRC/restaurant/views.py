@@ -48,3 +48,8 @@ def restaurant_branches_list(request, restaurant_id):
     restaurant = Restaurant.objects.get(id=restaurant_id)
     data = Branch.objects.filter(restaurant=restaurant)
     return render(request, "restaurant/restaurant_branches_list.html", {"data": data})
+
+
+def food_detail(request, id):
+    food = Food.objects.get(id=id)
+    return render(request, "restaurant/food_detail.html", {"data": food})
