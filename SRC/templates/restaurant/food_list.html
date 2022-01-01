@@ -11,6 +11,8 @@
 {% endblock title %}
 
 {% block content %}
+	<br>
+	<br>
 	<main class="container my-4">
 		<h1>Foods List</h1>
 		<hr>
@@ -23,9 +25,9 @@
 			{% if data %}
 				{% for food in data %}
 					<div class="col-md-3 mb-4">
-						<div class="card shadow">
+						<div class="card shadow text-center">
 						  <div class="card-body">
-							<h6 class="card-text"><a href="/restaurant/food-detail/{{food.id}}">{{food.name}}</a></h6>
+							<h6 class="card-text"><a href="/food-detail/{{food.id}}">{{food.name}}</a></h6>
                             <h6 class="card-text"><img src="{{food.image.url}}"
 													   class="card-img-top"></h6>
 							<h6 class="card-text">

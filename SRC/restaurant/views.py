@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.views.generic import DetailView
+
 from .models import *
 
 
@@ -31,10 +33,15 @@ def branches_list(request):
     return render(request, "restaurant/branches_list.html", {"data": data})
 
 
-def food_reataurant_meal_foods_list(request, food_restaurant_category_id):
-    food_restaurant_category = FoodRestaurantCategory.objects.get(id=food_restaurant_category_id)
-    data = Food.objects.filter(food_restaurant_category=food_restaurant_category).order_by("-id")
-    return render(request, "restaurant/food_reataurant_meal_foods_list.html", {"data": data})
+class FoodRestaurantCategoryDetail(DetailView):
+    model = FoodRestaurantCategory
+    template_name = "restaurant/food_reataurant_meal_foods_list.html"
+
+    def get_context_data(self, *args, **kwargs):
+        frc = FoodRestaurantCategory.objects.get(id=self.kwargs['pk'])
+        context = super().get_context_data(**kwargs)
+        context['foods'] = Food.objects.filter(food_restaurant_category=frc)
+        return context
 
 
 def meal_category_foods_list(request, meal_category_id):
@@ -54,7 +61,6 @@ def food_detail(request, id):
     return render(request, "restaurant/food_detail.html", {"data": food})
 
 
-# menus based on branches
 def branch_detail(request, id):
     branch = Branch.objects.get(id=id)
     menus = Menu.objects.filter(branch=branch)

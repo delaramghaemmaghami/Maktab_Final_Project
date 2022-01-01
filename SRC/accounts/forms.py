@@ -24,7 +24,7 @@ class CustomerCreationForm(UserCreationForm):
         user.last_name = self.cleaned_data.get("last_name")
         user.email = self.cleaned_data.get("email")
         # user.user_address = self.cleaned_data.get("addresses")
-        user.is_customer = True
+        # user.is_customer = True
         user.save()
         return user
 
@@ -43,6 +43,6 @@ class StaffCreationForm(UserCreationForm):
         user.first_name = self.cleaned_data.get("first_name")
         user.last_name = self.cleaned_data.get("last_name")
         user.email = self.cleaned_data.get("email")
-        user.is_staff = True
+        # user.is_staff = True
         user.save()
         return user

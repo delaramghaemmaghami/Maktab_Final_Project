@@ -15,12 +15,18 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
-    is_customer = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
+    # is_customer = models.BooleanField(default=False)
+    # is_staff = models.BooleanField(default=False)
     user_address = models.ManyToManyField(UserAddress)
 
 
 class Customer(CustomUser):
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.is_staff = False
+            self.is_superuser = False
+            return super(Customer, self).save(*args, **kwargs)
+
     class Meta:
         proxy = True
         verbose_name = "مشتری"
@@ -28,6 +34,12 @@ class Customer(CustomUser):
 
 
 class Staff(CustomUser):
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.is_staff = True
+            self.is_superuser = False
+            return super(Staff, self).save(*args, **kwargs)
+
     class Meta:
         proxy = True
         verbose_name = "مدیر رستوران"
@@ -35,6 +47,11 @@ class Staff(CustomUser):
 
 
 class Admin(CustomUser):
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.is_superuser = True
+            return super(Admin, self).save(*args, **kwargs)
+
     class Meta:
         proxy = True
         verbose_name = "مدیر سایت"
