@@ -19,3 +19,13 @@ def food_restaurant_meal_list(request):
 def meal_category_list(request):
     data = MealCategory.objects.all().order_by("-id")
     return render(request, "restaurant/meal_category_list.html", {"data": data})
+
+
+def restaurants_list(request):
+    data = Restaurant.objects.all().order_by("-id")
+    return render(request, "restaurant/restaurant_list.html", {"data": data})
+
+
+def branches_list(request):
+    data = Branch.objects.all().order_by("-id")
+    return render(request, "restaurant/branches_list.html", {"data": data})
