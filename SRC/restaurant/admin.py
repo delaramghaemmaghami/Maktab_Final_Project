@@ -3,7 +3,7 @@ from .models import *
 
 
 class FoodAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "food_restaurant_categories", "meal_categories"]
+    list_display = ["id", "name", "image_tag", "food_restaurant_categories", "meal_categories"]
     list_display_links = ["name"]
 
     fieldsets = [("CATEGORIES", {'fields': ("food_restaurant_category", "meal_category")}),

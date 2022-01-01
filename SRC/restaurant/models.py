@@ -2,6 +2,7 @@ import os.path
 
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils.safestring import mark_safe
 
 
 class Restaurant(models.Model):
@@ -68,6 +69,9 @@ class Food(models.Model):
 
     def food_restaurant_categories(self):
         return "\n ,".join([food_cat.name for food_cat in self.food_restaurant_category.all()])
+
+    def image_tag(self):
+        return mark_safe("<img src='%s' width='50' width='50'/>" % (self.image.url))
 
     def __str__(self):
         return self.name
