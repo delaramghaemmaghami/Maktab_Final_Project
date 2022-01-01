@@ -56,9 +56,9 @@ def restaurant_branches_list(request, restaurant_id):
     return render(request, "restaurant/restaurant_branches_list.html", {"data": data})
 
 
-def food_detail(request, id):
-    food = Food.objects.get(id=id)
-    return render(request, "restaurant/food_detail.html", {"data": food})
+class FoodDetail(DetailView):
+    model = Food
+    template_name = "restaurant/food_detail.html"
 
 
 def branch_detail(request, id):

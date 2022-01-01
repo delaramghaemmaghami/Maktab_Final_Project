@@ -20,6 +20,6 @@ urlpatterns = [
     path("restaurant-branches-list/<int:restaurant_id>",
          restaurant_branches_list, name="restaurant_branches_list"),
 
-    path("food-detail/<int:id>/", food_detail, name="food-detail"),
+    path("food-detail/<int:pk>/", FoodDetail.as_view(), name="food-detail"),
     path("branch-detail/<int:id>/", branch_detail, name="branch-detail")
 ]
