@@ -9,6 +9,11 @@ class CustomerCreationForm(UserCreationForm):
     last_name = forms.CharField(max_length=100, required=True)
     email = forms.EmailField(required=True)
 
+    # addresses = forms.ModelMultipleChoiceField(
+    #     queryset=UserAddress.objects.all(),
+    #     widget=forms.CheckboxSelectMultiple
+    # )
+
     class Meta(UserCreationForm.Meta):
         model = CustomUser
 
@@ -18,9 +23,9 @@ class CustomerCreationForm(UserCreationForm):
         user.first_name = self.cleaned_data.get("first_name")
         user.last_name = self.cleaned_data.get("last_name")
         user.email = self.cleaned_data.get("email")
+        # user.user_address = self.cleaned_data.get("addresses")
         user.is_customer = True
         user.save()
-        # customer = Customer.objects.create(user=user)
         return user
 
 
@@ -40,5 +45,4 @@ class StaffCreationForm(UserCreationForm):
         user.email = self.cleaned_data.get("email")
         user.is_staff = True
         user.save()
-        # customer = Customer.objects.create(user=user)
         return user

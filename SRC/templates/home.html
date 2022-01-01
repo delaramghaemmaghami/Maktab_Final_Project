@@ -15,11 +15,10 @@
     <p>Welcome to deliran online shop! &#128512;</p>
     {% if user.is_authenticated %}
         <div class="mymargin">
-            Hi {{ user.username }}!
-            <p><a href="{% url 'logout' %}">Log Out</a></p>
-            <button type="button" class="btn btn-warning">
-                <a href="{% url 'logout' %}">Log Out</a>
-            </button>
+            <p>Hi {{ user.username }}!</p>
+            <div>
+                <a href="{% url 'logout' %}" class="btn btn-danger" role="button">Log Out</a>
+            </div>
         </div>
     {% else %}
         <div class="mymargin">
