@@ -9,4 +9,6 @@ urlpatterns = [
     path("food-restaurant-meal-list/", food_restaurant_meal_list, name="food_restaurant_meal_list"),
     path("restaurant-list/", restaurants_list, name="Restaurants_list"),
     path("branches-list/", branches_list, name="branches_list"),
+    path("food-reataurant-meal-foods-list/<int:food_restaurant_category_id>",
+         food_reataurant_meal_foods_list, name="food_reataurant_meal_foods_list"),
 ]

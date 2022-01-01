@@ -29,3 +29,9 @@ def restaurants_list(request):
 def branches_list(request):
     data = Branch.objects.all().order_by("-id")
     return render(request, "restaurant/branches_list.html", {"data": data})
+
+
+def food_reataurant_meal_foods_list(request, food_restaurant_category_id):
+    food_restaurant_category = FoodRestaurantCategory.objects.get(id=food_restaurant_category_id)
+    data = Food.objects.filter(food_restaurant_category=food_restaurant_category).order_by("-id")
+    return render(request, "restaurant/food_reataurant_meal_foods_list.html", {"data": data})
