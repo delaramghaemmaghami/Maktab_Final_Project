@@ -27,7 +27,7 @@ class CustomerSignUpView(CreateView):
 
 class StaffSignUpView(CreateView):
     model = CustomUser
-    form_class = StaffCreationForm
+    form_class = StaffCreationForm  # ...
     template_name = "accounts/signup.html"
 
     def get_context_data(self, **kwargs):

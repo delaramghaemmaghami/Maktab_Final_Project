@@ -5,9 +5,14 @@
 {% endblock title %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">login</button>
-    </form>
+    <br>
+    <br>
+    <br>
+    <div class="col-md-10 mb-4">
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit" class="btn btn-warning">login</button>
+        </form>
+	</div>
 {% endblock content %}
