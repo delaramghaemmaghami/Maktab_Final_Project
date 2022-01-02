@@ -20,7 +20,6 @@
             <a href="{% url 'signup' %}" class="btn btn-danger" role="button">Back</a>
 		</div>
 		<br>
-		<div class="row">
             <div class="card shadow p-4">
                 <form method="post">
                     {% csrf_token %}
@@ -28,6 +27,5 @@
                     <button type="submit" class="btn btn-warning">Signup</button>
                 </form>
             </div>
-		</div>
 	</main>
 {% endblock content %}
