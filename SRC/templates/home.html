@@ -24,10 +24,8 @@
         </div>
     {% else %}
         <div class="mymargin">
-            <p>You are not logged in</p>
+            <p>You are not logged in!</p>
             <a href="{% url 'login' %}" class="btn btn-warning" role="button">Login</a>
-            <a href="{% url 'customer_signup' %}" class="btn btn-success" role="button">Customer Sign Up</a>
-            <a href="{% url 'staff_signup' %}" class="btn btn-success" role="button">Staff Sign Up</a>
         </div>
     {% endif %}
 {% endblock content %}

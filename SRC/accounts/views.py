@@ -1,19 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from .forms import *
 from .models import *
 
 
 def sign_up(request):
-    return render(request, "home.html")
+    return render(request, "accounts/signup.html")
 
 
 class CustomerSignUpView(CreateView):
     model = CustomUser
     form_class = CustomerCreationForm
-    template_name = "accounts/signup.html"
+    template_name = "accounts/signup_user.html"
 
     def get_context_data(self, **kwargs):
         kwargs["user_type"] = "customer"
@@ -27,8 +26,8 @@ class CustomerSignUpView(CreateView):
 
 class StaffSignUpView(CreateView):
     model = CustomUser
-    form_class = StaffCreationForm  # ...
-    template_name = "accounts/signup.html"
+    form_class = StaffCreationForm
+    template_name = "accounts/signup_user.html"
 
     def get_context_data(self, **kwargs):
         kwargs["user_type"] = "staff"

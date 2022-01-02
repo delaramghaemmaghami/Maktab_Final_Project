@@ -8,11 +8,11 @@
     <br>
     <br>
     <br>
-    <div class="col-md-10 mb-4">
-        <form method="post">
-            {% csrf_token %}
-            {{form.as_p}}
-            <button type="submit" class="btn btn-warning">Signup</button>
-        </form>
-	</div>
+    <div class="card shadow p-4 m-4">
+        <a href="{% url 'customer_signup' %}" class="btn btn-success" role="button">Customer Sign Up</a>
+        <br>
+        <a href="{% url 'staff_signup' %}" class="btn btn-success" role="button">Staff Sign Up</a>
+    </div>
+    <br>
+    <br>
 {% endblock content %}
