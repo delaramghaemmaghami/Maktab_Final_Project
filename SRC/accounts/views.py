@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.views.generic import CreateView
+from django.contrib.auth import views
 from .forms import *
 from .models import *
 
@@ -37,3 +38,8 @@ class StaffSignUpView(CreateView):
         user = form.save()
         login(self.request, user)
         return redirect("home")
+    
+
+class LoginView(views.LoginView):
+    form_class = UserLoginForm
+    template_name = "accounts/login.html"
