@@ -1,11 +1,38 @@
-from django.shortcuts import render
-from django.views.generic import DetailView
-
+from django.shortcuts import render, redirect
+from django.views.generic import DetailView, CreateView, TemplateView
 from .models import *
+from .forms import *
+from accounts.mixins import StaffRequiredMixin, SuperUserRequiredMixin
+from .serializer import *
+from rest_framework import viewsets, permissions
 
 
 def home(request):
     return render(request, "home.html")
+
+
+class FoodAdminViewSet(viewsets.ModelViewSet):
+    queryset = Food.objects.all()
+    serializer_class = FoodSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class FoodCategoryViewSet(viewsets.ModelViewSet):
+    queryset = FoodRestaurantCategory.objects.all()
+    serializer_class = FoodCategorySerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class MealViewSet(viewsets.ModelViewSet):
+    queryset = MealCategory.objects.all()
+    serializer_class = MealSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class MealCategoryViewSet(viewsets.ModelViewSet):
+    queryset = Food.objects.all()
+    serializer_class = FoodRestaurantCategory
+    permission_classes = [permissions.IsAdminUser]
 
 
 def food_list(request):
@@ -65,3 +92,12 @@ def branch_detail(request, id):
     branch = Branch.objects.get(id=id)
     menus = Menu.objects.filter(branch=branch)
     return render(request, "restaurant/branch_detail.html", {"data": branch, "menus": menus})
+
+
+class AdminPanel(SuperUserRequiredMixin, TemplateView):
+    template_name = "restaurant/admin_panel/admin_panel.html"
+
+
+def orders_list(request):
+    data = Order.objects.all().order_by("-id")
+    return render(request, "restaurant/orders_list.html", {"data": data})

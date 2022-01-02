@@ -1,5 +1,17 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+
 from .views import *
+
+
+router_one = routers.DefaultRouter()
+router_one.register(r"FoodAdminViewSet", FoodAdminViewSet)
+
+router_two = routers.DefaultRouter()
+router_two.register(r"FoodCategoryViewSet", FoodCategoryViewSet)
+
+router_three = routers.DefaultRouter()
+router_three.register(r"MealViewSet", MealViewSet)
 
 
 urlpatterns = [
@@ -21,5 +33,12 @@ urlpatterns = [
          restaurant_branches_list, name="restaurant_branches_list"),
 
     path("food-detail/<int:pk>/", FoodDetail.as_view(), name="food-detail"),
-    path("branch-detail/<int:id>/", branch_detail, name="branch-detail")
+    path("branch-detail/<int:id>/", branch_detail, name="branch-detail"),
+
+    path("admin-panel/", AdminPanel.as_view(), name="admin_panel"),
+    path("orders-list/", orders_list, name="orders_list"),
+
+    path("", include(router_one.urls)),
+    path("", include(router_two.urls)),
+    path("", include(router_three.urls)),
 ]
