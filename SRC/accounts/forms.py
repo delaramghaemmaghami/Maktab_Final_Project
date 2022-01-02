@@ -9,11 +9,6 @@ class CustomerCreationForm(UserCreationForm):
     last_name = forms.CharField(max_length=100, required=True)
     email = forms.EmailField(required=True)
 
-    # addresses = forms.ModelMultipleChoiceField(
-    #     queryset=UserAddress.objects.all(),
-    #     widget=forms.CheckboxSelectMultiple
-    # )
-
     class Meta(UserCreationForm.Meta):
         model = CustomUser
 
@@ -23,9 +18,8 @@ class CustomerCreationForm(UserCreationForm):
         user.first_name = self.cleaned_data.get("first_name")
         user.last_name = self.cleaned_data.get("last_name")
         user.email = self.cleaned_data.get("email")
-        # user.user_address = self.cleaned_data.get("addresses")
-        # user.is_customer = True
         user.save()
+
         return user
 
     def __init__(self, *args, **kwargs):
@@ -75,6 +69,7 @@ class UserLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(
         attrs={"class": "form-control", "placeholder": "Enter your email ...", "id": "hello"}),
         label="Email / Username")
+
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={
             "class": "form-control",
