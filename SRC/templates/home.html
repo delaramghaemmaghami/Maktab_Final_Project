@@ -30,15 +30,18 @@
         </div>
     {% endif %}
     <hr>
+        <h3>BEST SOLED</h3>
+        <br>
 		<div class="row">
 			{% if data %}
 				{% for mo in data %}
 					<div class="col-md-3 mb-4">
 						<div class="card shadow text-center">
 						  <div class="card-body">
-							<h6 class="card-text"><a href="/food-detail/{{mo.menu.food.id}}">{{mo.menu.food.name}}</a></h6>
-                            <h6 class="card-text"><img src="{{mo.menu.food.image.url}}"
-													   class="card-img-top"></h6>
+							<h6 class="card-text"><a href="/food-detail/{{mo.menu.food.id}}">
+                                {{mo.menu.food.name}}
+                            </a></h6>
+                            <h6 class="card-text"><img src="{{mo.menu.food.image.url}}" class="card-img-top"></h6>
 							<h6 class="card-text">
 								{% for fmc in mo.menu.food.meal_category.all %}{{fmc}} ,{% endfor %}
 							</h6>
@@ -46,6 +49,27 @@
 							<h6 class="card-text">
 								{% for frc in mo.menu.food.food_restaurant_category.all %}{{frc}} ,{% endfor %}
 							</h6>
+						  </div>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+        <hr>
+        <h3>BEST BRANCHES</h3>
+        <br>
+		<div class="row">
+			{% if best_selled_branches %}
+				{% for bsb in best_selled_branches %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow text-center">
+						  <div class="card-body">
+							<h6 class="card-text"><a href="/branch-detail/{{bsb.id}}">
+                                {{bsb.name}}
+                            </a></h6>
+							<hr>
+                            <h6 class="card-text">Restaurant: {{bsb.restaurant.name}}</h6>
+							<h6 class="card-text">Manager: {{bsb.manager}}</h6>
 						  </div>
 						</div>
 					</div>

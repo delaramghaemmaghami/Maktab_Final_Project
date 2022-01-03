@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView, CreateView, TemplateView
 from .models import *
@@ -8,8 +9,29 @@ from rest_framework import viewsets, permissions
 
 
 def home(request):
-    data = MenuOrder.objects.filter(order__status="ثبت").order_by("-number")
-    return render(request, "home.html", {"data": data})
+    data = MenuOrder.objects.filter(
+        Q(order__status="ثبت") | Q(order__status="ارسال") | Q(order__status="تحویل")).order_by("-number")
+
+    branches = Branch.objects.all()
+
+    branches_total_order = {}
+
+    for branch in branches:
+        total_order = 0
+        menu_orders = MenuOrder.objects.filter(
+            Q(order__status="ثبت") | Q(order__status='ارسال') | Q(order__status='تحویل'))
+
+        for mo in menu_orders:
+            if mo.order.branch == branch:
+                total_order += mo.number
+
+        branches_total_order[branch] = [total_order, branch.restaurant.name, branch.id, branch.restaurant.id]
+
+    best_selled_branches = dict(sorted(branches_total_order.items(), key=lambda x: x[1][0], reverse=True))
+
+    print(best_selled_branches)
+
+    return render(request, "home.html", {"data": data, "best_selled_branches": best_selled_branches})
 
 
 class FoodAdminViewSet(viewsets.ModelViewSet):
