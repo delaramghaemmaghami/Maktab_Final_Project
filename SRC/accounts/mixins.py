@@ -15,7 +15,7 @@ class StaffRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_staff:
             messages.error(
-                request)
+                request, "")
             return redirect(settings.LOGIN_URL)
         return super(StaffRequiredMixin, self).dispatch(request,
                                                         *args, **kwargs)
@@ -31,7 +31,7 @@ class SuperUserRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_superuser:
             messages.error(
-                request)
+                request, "")
             return redirect(settings.LOGIN_URL)
         return super(SuperUserRequiredMixin, self).dispatch(request,
                                                             *args, **kwargs)

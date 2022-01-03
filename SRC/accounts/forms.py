@@ -9,6 +9,10 @@ class CustomerCreationForm(UserCreationForm):
     last_name = forms.CharField(max_length=100, required=True)
     email = forms.EmailField(required=True)
 
+    city = forms.CharField(max_length=100)
+    address = forms.CharField(max_length=100)
+    zip_code = forms.CharField(max_length=15, required=True)
+
     class Meta(UserCreationForm.Meta):
         model = CustomUser
 
@@ -19,6 +23,12 @@ class CustomerCreationForm(UserCreationForm):
         user.last_name = self.cleaned_data.get("last_name")
         user.email = self.cleaned_data.get("email")
         user.save()
+
+        address = UserAddress.objects.create(city=self.cleaned_data.get("city"),
+                                             address=self.cleaned_data.get("address"),
+                                             zip_code=self.cleaned_data.get("zip_code"))
+
+        user.user_address.add(address)
 
         return user
 
@@ -32,11 +42,19 @@ class CustomerCreationForm(UserCreationForm):
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
         self.fields['email'].widget.attrs['class'] = 'form-control'
 
+        self.fields['city'].widget.attrs['class'] = 'form-control'
+        self.fields['address'].widget.attrs['class'] = 'form-control'
+        self.fields['zip_code'].widget.attrs['class'] = 'form-control'
+
 
 class StaffCreationForm(UserCreationForm):
     first_name = forms.CharField(max_length=100, required=True)
     last_name = forms.CharField(max_length=100, required=True)
     email = forms.EmailField(required=True)
+
+    city = forms.CharField(max_length=100)
+    address = forms.CharField(max_length=100)
+    zip_code = forms.CharField(max_length=15, required=True)
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
@@ -49,6 +67,13 @@ class StaffCreationForm(UserCreationForm):
         user.email = self.cleaned_data.get("email")
         user.is_staff = True
         user.save()
+
+        address = UserAddress.objects.create(city=self.cleaned_data.get("city"),
+                                             address=self.cleaned_data.get("address"),
+                                             zip_code=self.cleaned_data.get("zip_code"))
+
+        user.user_address.add(address)
+
         return user
 
     def __init__(self, *args, **kwargs):
@@ -60,6 +85,10 @@ class StaffCreationForm(UserCreationForm):
         self.fields['first_name'].widget.attrs['class'] = 'form-control'
         self.fields['last_name'].widget.attrs['class'] = 'form-control'
         self.fields['email'].widget.attrs['class'] = 'form-control'
+
+        self.fields['city'].widget.attrs['class'] = 'form-control'
+        self.fields['address'].widget.attrs['class'] = 'form-control'
+        self.fields['zip_code'].widget.attrs['class'] = 'form-control'
 
 
 class UserLoginForm(AuthenticationForm):

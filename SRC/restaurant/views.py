@@ -8,7 +8,8 @@ from rest_framework import viewsets, permissions
 
 
 def home(request):
-    return render(request, "home.html")
+    data = MenuOrder.objects.filter(order__status="ثبت").order_by("-number")
+    return render(request, "home.html", {"data": data})
 
 
 class FoodAdminViewSet(viewsets.ModelViewSet):
