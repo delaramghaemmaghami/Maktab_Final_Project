@@ -38,16 +38,16 @@
 					<div class="col-md-3 mb-4">
 						<div class="card shadow text-center">
 						  <div class="card-body">
-							<h6 class="card-text"><a href="/food-detail/{{mo.menu.food.id}}">
-                                {{mo.menu.food.name}}
+							<h6 class="card-text"><a href="/food-detail/{{mo.id}}">
+                                {{mo.name}}
                             </a></h6>
-                            <h6 class="card-text"><img src="{{mo.menu.food.image.url}}" class="card-img-top"></h6>
+                            <h6 class="card-text"><img src="{{mo.image.url}}" class="card-img-top"></h6>
 							<h6 class="card-text">
-								{% for fmc in mo.menu.food.meal_category.all %}{{fmc}} ,{% endfor %}
+								{% for fmc in mo.meal_category.all %}{{fmc}} ,{% endfor %}
 							</h6>
 							<hr>
 							<h6 class="card-text">
-								{% for frc in mo.menu.food.food_restaurant_category.all %}{{frc}} ,{% endfor %}
+								{% for frc in mo.food_restaurant_category.all %}{{frc}} ,{% endfor %}
 							</h6>
 						  </div>
 						</div>
