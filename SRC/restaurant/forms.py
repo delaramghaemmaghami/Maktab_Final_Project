@@ -6,17 +6,20 @@ from .models import *
 class AddFoodForm(ModelForm):
     class Meta:
         model = Food
-        fields = ['name', 'image', 'meal_category', "food_restaurant_category", 'description']
+        fields = ["name", "image", "meal_category", "food_restaurant_category", 'description']
 
     @transaction.atomic
     def save(self):
         obj = super().save(commit=False)
+
         obj.name = self.cleaned_data.get("name")
         obj.image = self.cleaned_data.get("image")
         obj.meal_category = self.cleaned_data.get("meal_category")
         obj.food_restaurant_category = self.cleaned_data.get("food_restaurant_category")
         obj.description = self.cleaned_data.get("description")
+
         obj.save()
+
         return obj
 
     def __init__(self, *args, **kwargs):
@@ -37,7 +40,9 @@ class AddMealCategoryForm(ModelForm):
     @transaction.atomic
     def save(self):
         obj = super().save(commit=False)
+
         obj.save()
+
         return obj
 
     def __init__(self, *args, **kwargs):
@@ -54,7 +59,9 @@ class AddFoodRestaurantCategoryForm(ModelForm):
     @transaction.atomic
     def save(self):
         obj = super().save(commit=False)
+
         obj.save()
+
         return obj
 
     def __init__(self, *args, **kwargs):

@@ -3,8 +3,9 @@ from .models import *
 
 
 class FoodAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "image_tag", "food_restaurant_categories", "meal_categories",
-                    "created", "created_at_jalali"]
+    list_display = ["id", "name", "image_tag", "food_restaurant_categories", "meal_categories", "created",
+                    "created_at_jalali"]
+
     list_display_links = ["name"]
 
     fieldsets = [("CATEGORIES", {'fields': ("food_restaurant_category", "meal_category")}),
@@ -56,7 +57,9 @@ class FoodRestaurantCategoryAdmin(admin.ModelAdmin):
 
 
 class BranchAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "is_main", "food_restaurant_category", "restaurant", "created", "created_at_jalali"]
+    list_display = ["id", "name", "is_main", "food_restaurant_category", "restaurant", "created",
+                    "created_at_jalali"]
+
     list_display_links = ["name"]
 
 

@@ -1,53 +1,28 @@
-from django.db.models import Q
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
-from django.views.generic import DetailView, CreateView, TemplateView
-from .models import *
-from .forms import *
-from accounts.mixins import StaffRequiredMixin, SuperUserRequiredMixin
-from .serializer import *
-from rest_framework import viewsets, permissions
 import json
+
+import accounts.mixins
+from django.db.models import Q, Sum
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.views.generic import DetailView, TemplateView
+from rest_framework import viewsets, permissions
+
+from .serializer import *
+from .forms import *
 
 
 def home(request):
-    foods = Food.objects.all()
+    foods = Food.objects.filter(
+        Q(food_rel__menu_rel__order__status="ثبت") |
+        Q(food_rel__menu_rel__order__status='ارسال') |
+        Q(food_rel__menu_rel__order__status='تحویل')).annotate(total_order=Sum("food_rel__menu_rel__number")).order_by("-total_order")
 
-    food_total_order = {}
+    branches = Branch.objects.filter(
+        Q(branch_rell__status="ثبت") |
+        Q(branch_rell__status='ارسال') |
+        Q(branch_rell__status='تحویل')).annotate(total_order=Sum("branch_rell__order_rel__number")).order_by("-total_order")
 
-    for food in foods:
-        total_order = 0
-        menu_orders = MenuOrder.objects.filter(
-            Q(order__status="ثبت") | Q(order__status='ارسال') | Q(order__status='تحویل'))
-
-        for mo in menu_orders:
-            if mo.menu.food == food:
-                total_order += mo.number
-
-        if total_order != 0:
-            food_total_order[food] = total_order
-
-    best_sold_foods = dict(sorted(food_total_order.items(), key=lambda x: x[1], reverse=True))
-
-    branches = Branch.objects.all()
-
-    branches_total_order = {}
-
-    for branch in branches:
-        total_order = 0
-        menu_orders = MenuOrder.objects.filter(
-            Q(order__status="ثبت") | Q(order__status='ارسال') | Q(order__status='تحویل'))
-
-        for mo in menu_orders:
-            if mo.order.branch == branch:
-                total_order += mo.number
-
-        if total_order != 0:
-            branches_total_order[branch] = total_order
-
-    best_selled_branches = dict(sorted(branches_total_order.items(), key=lambda x: x[1], reverse=True))
-
-    return render(request, "home.html", {"data": best_sold_foods, "best_selled_branches": best_selled_branches})
+    return render(request, "home.html", {"data": foods, "best_selled_branches": branches})
 
 
 class FoodAdminViewSet(viewsets.ModelViewSet):
@@ -133,7 +108,7 @@ def branch_detail(request, id):
     return render(request, "restaurant/branch_detail.html", {"data": branch, "menus": menus})
 
 
-class AdminPanel(SuperUserRequiredMixin, TemplateView):
+class AdminPanel(accounts.mixins.SuperUserRequiredMixin, TemplateView):
     template_name = "restaurant/admin_panel/admin_panel.html"
 
 
@@ -142,28 +117,45 @@ def orders_list(request):
     return render(request, "restaurant/orders_list.html", {"data": data})
 
 
-# def update_item(request):
-#     data = json.loads(request.body)
-#     foodId = data["foodId"]
-#     action = data["action"]
-#
-#     print("foodId: ", foodId)
-#     print("Action: ", action)
-#
-#     customer = request.user
-#     food = Food.objects.get(id=foodId)
-#     order = Order.objects.get_or_create(user=customer)
-#
-#     # menu_order, created = MenuOrder.objects.get_or_create(order=order, food=food)
-#
-#     # if action == "add":
-#     #     menu_order.number = (menu_order.number + 1)
-#     # elif action == "remove":
-#     #     menu_order.number = (menu_order.number - 1)
-#     #
-#     # menu_order.save()
-#
-#     # if menu_order.number <= 0:
-#     #     menu_order.delete()
-#
-#     return JsonResponse("It was added", safe=False)
+def update_item(request):
+    data = json.loads(request.body)
+
+    menuId = data["menuId"]
+    action = data["action"]
+
+    customer = request.user
+    menu = Menu.objects.get(id=menuId)
+    branchId = menu.branch.id
+    branch = Branch.objects.get(id=branchId)
+    order, order_create = Order.objects.get_or_create(user=customer, branch=branch)
+
+    menu_order, menu_order_create = MenuOrder.objects.get_or_create(order=order, menu=menu)
+
+    if action == "add":
+        menu_order.number = (menu_order.number + 1)
+        menu.inventory -= menu.inventory
+        menu_order.price += int(menu.price)
+
+    elif action == "remove":
+        menu_order.number = (menu_order.number - 1)
+
+    menu_order.save()
+
+    if menu_order.number <= 0:
+        menu_order.delete()
+
+    return JsonResponse("It was added", safe=False)
+
+
+def cart(request):
+    data = MenuOrder.objects.filter(order__user__username=str(request.user)).order_by("-id")
+
+    result = 0
+    for d in data:
+        result += d.price
+    return render(request, "restaurant/user_cart.html", {"data": data, "result": result})
+
+
+def delete_food_order(request, id):
+    menu_order = MenuOrder.objects.get(id=id).delete()
+    return HttpResponseRedirect("/cart")
