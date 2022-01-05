@@ -136,9 +136,6 @@ def update_item(request):
         menu.inventory -= menu.inventory
         menu_order.price += int(menu.price)
 
-    elif action == "remove":
-        menu_order.number = (menu_order.number - 1)
-
     menu_order.save()
 
     if menu_order.number <= 0:
@@ -153,9 +150,33 @@ def cart(request):
     result = 0
     for d in data:
         result += d.price
+
+    order = Order.objects.get(id=data[0].order.id)
+    order.total_price = result
+    order.save()
+
     return render(request, "restaurant/user_cart.html", {"data": data, "result": result})
 
 
 def delete_food_order(request, id):
     menu_order = MenuOrder.objects.get(id=id).delete()
     return HttpResponseRedirect("/cart")
+
+
+def update_cart(request):
+    data = json.loads(request.body)
+
+    foodId = data["foodId"]
+    number = data["number"]
+
+    menu_order = MenuOrder.objects.get(id=foodId)
+    menu_order.number = number
+
+    menuId = menu_order.menu.id
+    menu = Menu.objects.get(id=menuId)
+
+    menu_order.price = menu.price * int(number)
+    menu_order.save()
+
+    return JsonResponse("It was added", safe=False)
+
