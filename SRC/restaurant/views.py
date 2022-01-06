@@ -1,6 +1,7 @@
 import json
 
 import accounts.mixins
+from django.contrib import messages
 from django.db.models import Q, Sum
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -9,6 +10,7 @@ from rest_framework import viewsets, permissions
 
 from .serializer import *
 from .forms import *
+from accounts.models import Customer
 
 
 def home(request):
@@ -120,26 +122,37 @@ def orders_list(request):
 
 
 def update_item(request):
+    global customer
     data = json.loads(request.body)
 
     menuId = data["menuId"]
     action = data["action"]
 
-    customer = request.user
     menu = Menu.objects.get(id=menuId)
     branchId = menu.branch.id
     branch = Branch.objects.get(id=branchId)
-    order, order_create = Order.objects.get_or_create(user=customer, branch=branch)
 
-    menu_order, menu_order_create = MenuOrder.objects.get_or_create(order=order, menu=menu)
+    if request.user.is_authenticated:
+        customer = request.user
 
-    menu_orders = MenuOrder.objects.filter(order__user__username=str(request.user)).order_by("-id")
-    mo = menu_orders[0].order.branch.name
-    x = MenuOrder.objects.filter(Q(order__user__username=str(request.user)) & ~Q(order__branch__name=mo)).delete()
+    if not request.user.is_authenticated:
+        device = request.COOKIES["device"]
+        customer, created = Customer.objects.get_or_create(device=device)
+
+        order, order_create = Order.objects.get_or_create(user=customer, branch=branch)
+
+        menu_order, menu_order_create = MenuOrder.objects.get_or_create(order=order, menu=menu)
+
+    menu_orders = MenuOrder.objects.filter(order__user__device=str(request.COOKIES["device"])).order_by("-id")
+
+    if menu_orders:
+        mo = menu_orders[0].order.branch.name
+        if MenuOrder.objects.filter(Q(order__user__device=str(request.COOKIES["device"])) & ~Q(order__branch__name=mo)):
+            messages.add_message(request, messages.INFO, "You can't order from different branches!")
+            x = MenuOrder.objects.filter(Q(order__user__device=str(request.COOKIES["device"])) & ~Q(order__branch__name=mo)).delete()
 
     if action == "add":
         menu_order.number = (menu_order.number + 1)
-        menu.inventory -= menu.inventory
         menu_order.price += int(menu.price)
 
     menu_order.save()
@@ -151,13 +164,14 @@ def update_item(request):
 
 
 def cart(request):
-    data = MenuOrder.objects.filter(order__user__username=str(request.user)).order_by("-id")
+    data = MenuOrder.objects.filter(order__user__device=str(request.COOKIES["device"])).order_by("-id")
 
     result = 0
-    for d in data:
-        result += d.price
 
     if data:
+        for d in data:
+            result += d.price
+
         order = Order.objects.get(id=data[0].order.id)
         order.total_price = result
         order.save()
@@ -172,17 +186,16 @@ def delete_food_order(request, id):
 
 def update_cart(request):
     data = json.loads(request.body)
-
     foodId = data["foodId"]
     number = data["number"]
-
+    # customer = request.user
     menu_order = MenuOrder.objects.get(id=foodId)
-    menu_order.number = number
-
     menuId = menu_order.menu.id
     menu = Menu.objects.get(id=menuId)
 
-    menu_order.price = menu.price * int(number)
-    menu_order.save()
+    if int(number) <= menu.inventory:
+        menu_order.number = int(number)
+        menu_order.price = menu.price * int(number)
+        menu_order.save()
 
     return JsonResponse("It was added", safe=False)
