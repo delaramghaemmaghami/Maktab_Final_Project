@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static '' %}">
+{% endblock style %}
+
+{% block title %}
+    SIGN UP
+{% endblock title %}
+
+{% block content %}
+    <br>
+	<br>
+	<main class="container my-4">
+		<h1>Sign Up</h1>
+		<hr>
+		<div>
+            <a href="{% url 'signup' %}" class="btn btn-danger" role="button">Back</a>
+		</div>
+		<br>
+            <div class="card shadow p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button type="submit" class="btn btn-warning">Signup</button>
+                </form>
+            </div>
+	</main>
+{% endblock content %}

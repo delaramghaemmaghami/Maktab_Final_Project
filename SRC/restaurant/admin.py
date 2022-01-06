@@ -3,11 +3,13 @@ from .models import *
 
 
 class FoodAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "food_restaurant_categories", "meal_categories"]
+    list_display = ["id", "name", "image_tag", "food_restaurant_categories", "meal_categories", "created",
+                    "created_at_jalali"]
+
     list_display_links = ["name"]
 
     fieldsets = [("CATEGORIES", {'fields': ("food_restaurant_category", "meal_category")}),
-                 ("OTHERS", {'fields': ("name", "image")})]
+                 ("OTHERS", {'fields': ("name", "image", "description")})]
 
 
 class RestaurantBranches(admin.TabularInline):
@@ -55,13 +57,20 @@ class FoodRestaurantCategoryAdmin(admin.ModelAdmin):
 
 
 class BranchAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "is_main", "food_restaurant_category", "restaurant"]
+    list_display = ["id", "name", "is_main", "food_restaurant_category", "restaurant", "created",
+                    "created_at_jalali"]
+
     list_display_links = ["name"]
 
 
 class MenuAdmin(admin.ModelAdmin):
     list_display = ["id", "food", "inventory"]
     list_display_links = ["food"]
+
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "branch", "status", "created", "created_at_jalali"]
+    list_display_links = ["id"]
 
 
 admin.site.register(Restaurant, RestaurantAdmin)
@@ -71,5 +80,5 @@ admin.site.register(FoodRestaurantCategory, FoodRestaurantCategoryAdmin)
 admin.site.register(Branch, BranchAdmin)
 admin.site.register(Food, FoodAdmin)
 admin.site.register(Menu, MenuAdmin)
-admin.site.register(Order)
+admin.site.register(Order, OrderAdmin)
 admin.site.register(MenuOrder)

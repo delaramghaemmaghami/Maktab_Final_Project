@@ -1,7 +1,9 @@
 import os.path
+import jdatetime
 
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils.safestring import mark_safe
 
 
 class Restaurant(models.Model):
@@ -44,6 +46,11 @@ class Branch(models.Model):
     branch_address = models.OneToOneField(BranchAddress, on_delete=models.CASCADE)
     manager = models.OneToOneField("accounts.Staff", on_delete=models.CASCADE)
 
+    @property
+    def created_at_jalali(self):
+        j_date = jdatetime.datetime.fromgregorian(datetime=self.created)
+        return j_date
+
     def __str__(self):
         return self.name
 
@@ -69,16 +76,24 @@ class Food(models.Model):
     def food_restaurant_categories(self):
         return "\n ,".join([food_cat.name for food_cat in self.food_restaurant_category.all()])
 
+    def image_tag(self):
+        return mark_safe("<img src='%s' width='50' width='50'/>" % self.image.url)
+
+    @property
+    def created_at_jalali(self):
+        j_date = jdatetime.datetime.fromgregorian(datetime=self.created)
+        return j_date
+
     def __str__(self):
         return self.name
 
 
 class Menu(models.Model):
     inventory = models.PositiveIntegerField()
-    price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=3)
+    price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=1)
 
-    food = models.ForeignKey(Food, on_delete=models.CASCADE)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name="food_rel")
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="branch_rel")
 
     def __str__(self):
         return f"{self.food} | {self.branch}"
@@ -91,24 +106,30 @@ class Order(models.Model):
         ("ارسال", "ارسال"),
         ("تحویل", "تحویل")
     ]
-    status = models.CharField(max_length=10, choices=status_choices, default="not paid")
+    status = models.CharField(max_length=10, choices=status_choices, default="سفارش")
+
     total_price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=3, default=0.0)
     created = models.DateTimeField(auto_now_add=True)
 
-    user = models.ForeignKey("accounts.Customer", on_delete=models.CASCADE)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    user_address = models.OneToOneField("accounts.UserAddress", on_delete=models.DO_NOTHING, blank=True)
+    user = models.ForeignKey("accounts.Customer", on_delete=models.CASCADE, null=True)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name="branch_rell")
+    user_address = models.OneToOneField("accounts.UserAddress", on_delete=models.DO_NOTHING, blank=True, null=True)
+
+    @property
+    def created_at_jalali(self):
+        j_date = jdatetime.datetime.fromgregorian(datetime=self.created)
+        return j_date
 
     def __str__(self):
         return f"{self.user} | {self.branch}"
 
 
 class MenuOrder(models.Model):
-    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name="menu_rel")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_rel")
 
-    number = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=3, default=0.0)
+    number = models.PositiveIntegerField(validators=[MinValueValidator(1)], default=0)
+    price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=1, default=0)
 
     def __str__(self):
         return f"{self.menu} | {self.order}"

@@ -1,17 +1,80 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock style %}
+
 {% block title %}
     HOME
 {% endblock title %}
 
 {% block content %}
-    <h1>Home</h1>
+    <main class="container my-4">
+    <br>
+	<br>
+    <h1>Home!</h1>
+    <p>Welcome to deliran online shop! &#128512;</p>
     {% if user.is_authenticated %}
-        Hi {{ user.username }}!
-        <p><a href="{% url 'account_logout' %}">Log Out</a></p>
+        <div class="mymargin">
+            <p>Hi {{ user.username }}!</p>
+            <div>
+                <a href="{% url 'logout' %}" class="btn btn-danger" role="button">Log Out</a>
+            </div>
+        </div>
     {% else %}
-        <p>You are not logged in</p>
-        <a href="{% url 'account_login' %}">Log In</a> |
-        <a href="{% url 'account_signup' %}">Sign Up</a>
+        <div class="mymargin">
+            <p>You are not logged in!</p>
+            <a href="{% url 'login' %}" class="btn btn-warning" role="button">Login</a>
+        </div>
     {% endif %}
+    <hr>
+        <h3>BEST SOLED</h3>
+        <br>
+		<div class="row">
+			{% if data %}
+				{% for mo in data %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow text-center">
+						  <div class="card-body">
+							<h6 class="card-text"><a href="/food-detail/{{mo.id}}">
+                                {{mo.name}}
+                            </a></h6>
+                            <h6 class="card-text"><img src="{{mo.image.url}}" class="card-img-top"></h6>
+							<h6 class="card-text">
+								{% for fmc in mo.meal_category.all %}{{fmc}} ,{% endfor %}
+							</h6>
+							<hr>
+							<h6 class="card-text">
+								{% for frc in mo.food_restaurant_category.all %}{{frc}} ,{% endfor %}
+							</h6>
+						  </div>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+        <hr>
+        <h3>BEST BRANCHES</h3>
+        <br>
+		<div class="row">
+			{% if best_selled_branches %}
+				{% for bsb in best_selled_branches %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow text-center">
+						  <div class="card-body">
+							<h6 class="card-text"><a href="/branch-detail/{{bsb.id}}">
+                                {{bsb.name}}
+                            </a></h6>
+							<hr>
+                            <h6 class="card-text">Restaurant: {{bsb.restaurant.name}}</h6>
+							<h6 class="card-text">Manager: {{bsb.manager}}</h6>
+						  </div>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+    </main>
 {% endblock content %}

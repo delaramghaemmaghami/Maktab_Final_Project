@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="">
+{% endblock style %}
+
+{% block title %}
+    BRANCH DETAIL
+{% endblock title %}
+
+{% block content %}
+	<br>
+	<br>
+	<main class="container my-4">
+		<h1>Branch Detail</h1>
+		<hr>
+		<div>
+			<a href="{% url 'Restaurants_list' %}" class="btn btn-warning" role="button">Back</a>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-15">
+				<div class="card">
+					<div class="card-body">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Created</th>
+									<th>Is Main</th>
+									<th>Food Restaurant Category</th>
+                                    <th>Restaurant</th>
+                                    <th>Manager</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{{data.name}}</td>
+									<td>{{data.created_at_jalali}}</td>
+									<td>
+										{% if data.is_main %}
+											Is Main
+										{% else %}
+											<br>
+										{% endif %}
+									</td>
+									<td>{{data.food_restaurant_category}}</td>
+                                    <th>{{data.restaurant}}</th>
+                                    <th>{{data.manager}}</th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<h4>MENUS</h4>
+			{% if menus %}
+				<div  style="display: flex; flex-wrap: wrap;">
+					{% for m in menus %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow">
+						  <div class="card-body">
+							<h6 class="card-text">{{m.branch}}</h6>
+							<h6 class="card-text">{{m.food}}</h6>
+							<h6 class="card-text">{{m.price|floatformat:1}}</h6>
+							<h6 class="card-text">{{m.inventory}}</h6>
+							<hr>
+							<button data-m="{{m.id}}" data-action="add"
+									class="btn btn-outline-primary add-btn update-cart"
+							href="update_item">
+								Add to Cart
+							</button>
+						  </div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+		<br>
+		<h4>ADDRESS</h4>
+		<p>{{data.branch_address}}</p>
+        <br>
+        <h4>DESCRIPTION</h4>
+		<p>{{data.description}}</p>
+	</main>
+{% endblock content %}

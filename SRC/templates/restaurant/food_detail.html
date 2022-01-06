@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock style %}
+
+{% block title %}
+    FOOD DETAIL
+{% endblock title %}
+
+{% block content %}
+	<br>
+	<br>
+	<main class="container my-4">
+		<h1>Food Detail</h1>
+		<hr>
+		<div>
+			<a href="{% url 'foods_list' %}" class="btn btn-warning" role="button">Back</a>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-15">
+				<div class="card">
+					<div class="card-body">
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Photo</th>
+									<th>Name</th>
+									<th>Meal Category</th>
+									<th>Food Restaurant Category</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<img src="{{object.image.url}}">
+									</td>
+									<td>{{object.name}}</td>
+									<td>{% for mc in object.meal_category.all %}{{mc}}<br>{% endfor %}</td>
+									<td>{% for frc in object.food_restaurant_category.all %}{{frc}}<br>{% endfor %}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br>
+		<h4>DESCRIPTION</h4>
+		<p>{{object.description}}</p>
+	</main>
+{% endblock content %}

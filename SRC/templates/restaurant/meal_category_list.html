@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static '' %}">
+{% endblock style %}
+
+{% block title %}
+    CATEGORIES
+{% endblock title %}
+
+{% block content %}
+	<h1>Meal Categories List</h1>
+	<main class="container my-4">
+		<h3 class="my-4 border-bottom pb-1">Categories</h3>
+		<div>
+			<a href="{% url 'foods_list' %}" class="btn btn-warning" role="button">Back</a>
+		</div>
+		<br>
+		<div class="row">
+			{% if data %}
+				{% for cat in data %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow">
+						  <div class="card-body">
+							<h6 class="card-text text-center"><a href="/meal_category_foods_list/{{cat.id}}">
+								{{cat.name}}
+							</a></h6>
+						  </div>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</main>
+{% endblock content %}

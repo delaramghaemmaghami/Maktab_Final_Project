@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static '' %}">
+{% endblock style %}
+
+{% block title %}
+    BRANCHES
+{% endblock title %}
+
+{% block content %}
+	<br>
+	<br>
+	<main class="container my-4">
+		<h1>Branches List</h1>
+		<hr>
+		<div>
+			<a href="{% url 'Restaurants_list' %}" class="btn btn-warning" role="button">Back</a>
+		</div>
+		<br>
+		<div class="row">
+			{% if data %}
+				{% for cat in data %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow text-center">
+						  <div class="card-body">
+							<h6 class="card-text"><a href="/branch-detail/{{cat.id}}">{{cat.name}}</a></h6>
+							<hr>
+                            <h6 class="card-text">Opening Date: {{cat.created_at_jalali}}</h6>
+                            <h6 class="card-text">
+								{% if cat.is_main %}
+									Main Branch
+								{% else %}
+								  <br>
+								{% endif %}
+							</h6>
+						  </div>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</main>
+{% endblock content %}

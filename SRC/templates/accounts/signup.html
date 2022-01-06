@@ -5,9 +5,14 @@
 {% endblock title %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">signup</button>
-    </form>
+    <br>
+    <br>
+    <br>
+    <div class="card shadow p-4 m-4">
+        <a href="{% url 'customer_signup' %}" class="btn btn-success" role="button">Customer Sign Up</a>
+        <br>
+        <a href="{% url 'staff_signup' %}" class="btn btn-success" role="button">Staff Sign Up</a>
+    </div>
+    <br>
+    <br>
 {% endblock content %}

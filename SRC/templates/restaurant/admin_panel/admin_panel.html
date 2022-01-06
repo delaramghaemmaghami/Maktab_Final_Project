@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/admin_panel.css' %}">
+{% endblock style %}
+
+{% block title %}
+    ADMIN PANEL
+{% endblock title %}
+
+{% block content %}
+    <br>
+	<br>
+    <br>
+    <div class="card shadow p-3 m-4">
+        <h1>Admin Panel</h1>
+        <div class="container">
+            <hr>
+            <div class="row justify-content-center">
+                <a href="{% url 'admin:index' %}" class="btn btn-primary m-2 px-5 py-2"
+                   role="button" id="main-admin">Main Admin</a>
+            </div>
+            <hr>
+            <div class="row justify-content-center justify-content-around">
+                <a href="/FoodAdminViewSet/" class="btn btn-warning m-2 px-5  py-2" role="button">
+                    Add | Delete | Edite Food
+                </a>
+                <a href="/MealViewSet/" class="btn btn-warning m-2 px-5  py-2" role="button">
+                    Add | Delete | Edite Meal Category
+                </a>
+                <a href="/FoodCategoryViewSet/" class="btn btn-warning m-2 px-5  py-2" role="button">
+                     Add | Delete | Edite Food Restaurant Category
+                </a>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+{% endblock content %}
