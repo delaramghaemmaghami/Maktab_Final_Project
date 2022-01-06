@@ -6,21 +6,27 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import DetailView, TemplateView
 from rest_framework import viewsets, permissions
+from accounts.models import *
 
+from accounts.models import Customer
 from .serializer import *
 from .forms import *
+from accounts.models import *
+from django.contrib import messages
 
 
 def home(request):
     foods = Food.objects.filter(
         Q(food_rel__menu_rel__order__status="ثبت") |
         Q(food_rel__menu_rel__order__status='ارسال') |
-        Q(food_rel__menu_rel__order__status='تحویل')).annotate(total_order=Sum("food_rel__menu_rel__number")).order_by("-total_order")
+        Q(food_rel__menu_rel__order__status='تحویل')).annotate(total_order=Sum("food_rel__menu_rel__number")).order_by(
+        "-total_order")
 
     branches = Branch.objects.filter(
         Q(branch_rell__status="ثبت") |
         Q(branch_rell__status='ارسال') |
-        Q(branch_rell__status='تحویل')).annotate(total_order=Sum("branch_rell__order_rel__number")).order_by("-total_order")
+        Q(branch_rell__status='تحویل')).annotate(total_order=Sum("branch_rell__order_rel__number")).order_by(
+        "-total_order")
 
     return render(request, "home.html", {"data": foods, "best_selled_branches": branches})
 
@@ -118,22 +124,38 @@ def orders_list(request):
 
 
 def update_item(request):
+    global customer
     data = json.loads(request.body)
 
     menuId = data["menuId"]
     action = data["action"]
 
-    customer = request.user
     menu = Menu.objects.get(id=menuId)
     branchId = menu.branch.id
     branch = Branch.objects.get(id=branchId)
-    order, order_create = Order.objects.get_or_create(user=customer, branch=branch)
 
-    menu_order, menu_order_create = MenuOrder.objects.get_or_create(order=order, menu=menu)
+    if request.user.is_authenticated:
+        customer = request.user
+
+    if not request.user.is_authenticated:
+        print("NOT LOGGED IN _______________________________!!!")
+        device = request.COOKIES["device"]
+        customer, created = Customer.objects.get_or_create(device=device)
+
+        order, order_create = Order.objects.get_or_create(user=customer, branch=branch)
+
+        menu_order, menu_order_create = MenuOrder.objects.get_or_create(order=order, menu=menu)
+
+    menu_orders = MenuOrder.objects.filter(order__user__device=str(request.COOKIES["device"])).order_by("-id")
+
+    if menu_orders:
+        mo = menu_orders[0].order.branch.name
+        if MenuOrder.objects.filter(Q(order__user__device=str(request.COOKIES["device"])) & ~Q(order__branch__name=mo)):
+            messages.add_message(request, messages.INFO, "You can't order from different branches!")
+            x = MenuOrder.objects.filter(Q(order__user__device=str(request.COOKIES["device"])) & ~Q(order__branch__name=mo)).delete()
 
     if action == "add":
         menu_order.number = (menu_order.number + 1)
-        menu.inventory -= menu.inventory
         menu_order.price += int(menu.price)
 
     menu_order.save()
@@ -145,15 +167,17 @@ def update_item(request):
 
 
 def cart(request):
-    data = MenuOrder.objects.filter(order__user__username=str(request.user)).order_by("-id")
+    data = MenuOrder.objects.filter(order__user__device=str(request.COOKIES["device"])).order_by("-id")
 
     result = 0
-    for d in data:
-        result += d.price
 
-    order = Order.objects.get(id=data[0].order.id)
-    order.total_price = result
-    order.save()
+    if data:
+        for d in data:
+            result += d.price
+
+        order = Order.objects.get(id=data[0].order.id)
+        order.total_price = result
+        order.save()
 
     return render(request, "restaurant/user_cart.html", {"data": data, "result": result})
 
@@ -179,4 +203,3 @@ def update_cart(request):
     menu_order.save()
 
     return JsonResponse("It was added", safe=False)
-

@@ -14,35 +14,46 @@
 <main class="container my-4">
 	<br>
 	<br>
+	{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+				<p class="alert-danger">{{ message }}</p>
+			{% endfor %}
+		</ul>
+	{% endif %}
 	<h3 class="my-4 border-bottom pb-1">CART</h3>
-	<table class="table table-bordered">
+	{% if data %}
+	<table class="table table-bordered" style="border: 3px solid black">
 		<thead>
 			<tr>
-				<th>Food</th>
-				<th>Quantity</th>
-				<th>Price</th>
-				<th>Total</th>
+				<th style="border: 3px solid black">Food</th>
+				<th style="border: 3px solid black">Branch</th>
+				<th style="border: 3px solid black">Quantity</th>
+				<th style="border: 3px solid black">Price</th>
+				<th style="border: 3px solid black">Total</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody style="border: 3px solid black">
 			{% for mo in data %}
 			<tr>
-				<td>
+				<td style="border: 3px solid black">
 					<p><a href="">{{mo.menu.food.name}}</a></p>
 					<img style="width: 100px; height: 100px" src="{{mo.menu.food.image.url}}" alt="">
 				</td>
-				<td>
-					<input class="number" id="number-input" for="mo-number" type="number" value="{{mo.number}}" style="vertical-align: bottom;" />
+				<td style="border: 3px solid black">{{mo.order.branch.name}}</td>
+				<td style="border: 3px solid black">
+					<input class="number" id="number-input" for="mo-number" type="number" value="{{mo.number}}"
+						   style="vertical-align: bottom;" min="1"/>
 					<button id="mo-number" class="btn btn-sm btn-primary update-food" value="{{mo.id}}">
 						update
 					</button>
 					<p><a class="btn btn-sm btn-danger" href="/delete/{{mo.id}}">Delete</a></p>
-				<td>{{mo.menu.price}}</td>
-				<td>{{mo.price}}</td>
+				<td style="border: 3px solid black">{{mo.menu.price}}</td>
+				<td style="border: 3px solid black">{{mo.price}}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
-		<tfoot>
+		<tfoot style="border: 3px solid black">
 			<tr>
 				<td colspan="2"></td>
 				<th>Total</th>
@@ -55,6 +66,7 @@
 			</tr>
 		</tfoot>
 	</table>
+	{% endif %}
 </main>
 {% block js %}
 	<script type="text/javascript" src="{% static 'js/update_cart.js'%}"></script>
