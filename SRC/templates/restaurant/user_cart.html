@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block style %}
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/user_cart.css' %}">
 {% endblock style %}
 
 {% block title %}
@@ -16,47 +16,54 @@
 	<br>
 	<h3 class="my-4 border-bottom pb-1">CART</h3>
 	{% if data %}
-	<table class="table table-bordered">
-		<thead>
-			<tr>
-				<th>Food</th>
-				<th>Quantity</th>
-				<th>Price</th>
-				<th>Total</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for mo in data %}
-			<tr>
-				<td>
-					<p><a href="">{{mo.menu.food.name}}</a></p>
-					<img style="width: 100px; height: 100px" src="{{mo.menu.food.image.url}}" alt="">
-				</td>
-				<td>
-					<input class="number" id="number-input" for="mo-number" type="number" value="{{mo.number}}"
-						   style="vertical-align: bottom;" />
-					<button id="mo-number" class="btn btn-sm btn-primary update-food" value="{{mo.id}}">
-						update
-					</button>
-					<p><a class="btn btn-sm btn-danger" href="/delete/{{mo.id}}">Delete</a></p>
-				<td>{{mo.menu.price}}</td>
-				<td>{{mo.price}}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-		<tfoot>
-			<tr>
-				<td colspan="2"></td>
-				<th>Total</th>
-				<th>{{result}}</th>
-			</tr>
-			<tr>
-				<td colspan="4">
-					<a href="" class="btn btn-dark btn-sm">Checkout <i class="fa fa-long-arrow-alt-right"></i></a>
-				</td>
-			</tr>
-		</tfoot>
+	<table class="table table-striped" style="background-color: lightgoldenrodyellow">
+	  <thead>
+		<tr>
+		  <th scope="col">Food</th>
+		  <th scope="col">Quantity</th>
+		  <th scope="col">Price</th>
+		  <th scope="col">Total</th>
+		</tr>
+	  </thead>
+	  <tbody>
+		{% for mo in data %}
+		<tr>
+			<td>
+				<p><a href="">{{mo.menu.food.name}}</a></p>
+				<img style="width: 100px; height: 100px" src="{{mo.menu.food.image.url}}" alt="">
+			</td>
+			<td>
+				<input class="number" id="number-input" for="mo-number" type="number" value="{{mo.number}}"
+					   style="vertical-align: bottom;" />
+				<button id="mo-number" class="btn btn-sm btn-primary update-food" value="{{mo.id}}">
+					update
+				</button>
+				<p><a class="btn btn-sm btn-danger" href="/delete/{{mo.id}}">Delete</a></p>
+			<td>{{mo.menu.price}}</td>
+			<td>{{mo.price}}</td>
+		</tr>
+		{% endfor %}
+	  </tbody>
 	</table>
+	<div class="row">
+		<div class="col-md-6 mb-3">
+			<div class="card shadow text-center">
+			  <div class="card-body">
+				<h6 class="card-text">Total Price</h6>
+			  </div>
+			</div>
+		</div>
+		<div class="col-md-6 mb-3">
+			<div class="card shadow text-center">
+			  <div class="card-body">
+				<h6 class="card-text">{{result}}</h6>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<div class="text-center">
+		<a href="" class="btn btn-success">Checkout <i class="fa fa-long-arrow-alt-right"></i></a>
+	</div>
 	{% endif %}
 </main>
 {% block js %}
