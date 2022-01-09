@@ -1,4 +1,5 @@
 updateBtns = document.getElementsByClassName("update-food")
+
 let numbers = document.getElementsByClassName("number")
 
 for (let i = 0; i < updateBtns.length; i++) {

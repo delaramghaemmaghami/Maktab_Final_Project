@@ -11,26 +11,30 @@
 {% endblock title %}
 
 {% block content %}
-    <main class="container my-4">
+	<br>
+	<br>
+    <main class="container my-4 bg-image text-center" style="background-color: rgba(254,255,254,0.7);">
     <br>
 	<br>
-    <h1>Home!</h1>
-    <p>Welcome to deliran online shop! &#128512;</p>
+    <h1 style="color: white; font-family: cursive; background-color: orange; border-radius: 10px">
+		Welcome to deliran online shop!
+	</h1>
     {% if user.is_authenticated %}
         <div class="mymargin">
-            <p>Hi {{ user.username }}!</p>
+            <p style="color: orangered; font-family: cursive">Hi {{ user.username }}!</p>
             <div>
-                <a href="{% url 'logout' %}" class="btn btn-danger" role="button">Log Out</a>
+                <a href="{% url 'logout' %}" class="btn btn-danger" role="button"
+				style="font-family: cursive">Log Out</a>
             </div>
         </div>
     {% else %}
         <div class="mymargin">
-            <p>You are not logged in!</p>
+            <p style="color: orangered; font-family: cursive">You are not logged in!</p>
             <a href="{% url 'login' %}" class="btn btn-warning" role="button">Login</a>
         </div>
     {% endif %}
     <hr>
-        <h3>BEST SOLED</h3>
+        <h3 style="color: orangered; font-family: cursive">BEST SOLED</h3>
         <br>
 		<div class="row">
 			{% if data %}
@@ -56,7 +60,7 @@
 			{% endif %}
 		</div>
         <hr>
-        <h3>BEST BRANCHES</h3>
+        <h3 style="color: orangered; font-family: cursive">BEST BRANCHES</h3>
         <br>
 		<div class="row">
 			{% if best_selled_branches %}

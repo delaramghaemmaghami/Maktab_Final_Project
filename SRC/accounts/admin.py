@@ -1,6 +1,4 @@
 from django.contrib import admin
-from django.contrib.auth.hashers import make_password
-
 from .forms import *
 from .models import *
 
@@ -10,7 +8,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     model = CustomUser
     list_display = ["username", "email", "is_staff", "is_superuser"]
     fieldsets = (
-        (None, {"fields": ("first_name", "last_name", "device", "id")}),
+        (None, {"fields": ("first_name", "last_name",)}),
         ("Contact", {"fields": ("email", "user_address",)}),
     )
 

@@ -1,16 +1,14 @@
 import json
 
 import accounts.mixins
-from django.contrib import messages
 from django.db.models import Q, Sum
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import DetailView, TemplateView, ListView
 from rest_framework import viewsets, permissions
 
 from .serializer import *
 from .forms import *
-from accounts.models import Customer
 
 
 def home(request):
@@ -101,9 +99,11 @@ def restaurant_branches_list(request, restaurant_id):
     return render(request, "restaurant/restaurant_branches_list.html", {"data": data})
 
 
-class FoodDetail(DetailView):
-    model = Food
-    template_name = "restaurant/food_detail.html"
+def food_detail(request, id):
+    food = Food.objects.get(id=id)
+    data = Branch.objects.filter(branch_rel__food=food)
+    print(data)
+    return render(request, "restaurant/food_detail.html", {"object": food, "data": data})
 
 
 def branch_detail(request, id):
@@ -122,40 +122,30 @@ def orders_list(request):
 
 
 def update_item(request):
-    global customer
     data = json.loads(request.body)
 
     menuId = data["menuId"]
     action = data["action"]
 
+    customer = request.user
     menu = Menu.objects.get(id=menuId)
     branchId = menu.branch.id
     branch = Branch.objects.get(id=branchId)
+    order, order_create = Order.objects.get_or_create(user=customer, branch=branch)
 
-    if request.user.is_authenticated:
-        customer = request.user
+    menu_order, menu_order_create = MenuOrder.objects.get_or_create(order=order, menu=menu)
 
-    if not request.user.is_authenticated:
-        device = request.COOKIES["device"]
-        customer, created = Customer.objects.get_or_create(device=device)
-
-        order, order_create = Order.objects.get_or_create(user=customer, branch=branch)
-
-        menu_order, menu_order_create = MenuOrder.objects.get_or_create(order=order, menu=menu)
-
-    menu_orders = MenuOrder.objects.filter(order__user__device=str(request.COOKIES["device"])).order_by("-id")
-
-    if menu_orders:
-        mo = menu_orders[0].order.branch.name
-        if MenuOrder.objects.filter(Q(order__user__device=str(request.COOKIES["device"])) & ~Q(order__branch__name=mo)):
-            messages.add_message(request, messages.INFO, "You can't order from different branches!")
-            x = MenuOrder.objects.filter(Q(order__user__device=str(request.COOKIES["device"])) & ~Q(order__branch__name=mo)).delete()
+    menu_orders = MenuOrder.objects.filter(order__user__username=str(request.user)).order_by("-id")
+    mo = menu_orders[0].order.branch.name
+    x = MenuOrder.objects.filter(Q(order__user__username=str(request.user)) & ~Q(order__branch__name=mo)).delete()
+    y = Order.objects.filter(Q(user__username=str(request.user)) & ~Q(branch__name=mo)).delete()
 
     if action == "add":
-        menu_order.number = (menu_order.number + 1)
-        menu_order.price += int(menu.price)
+        if menu_order.number < menu_order.menu.inventory:
+            menu_order.number = (menu_order.number + 1)
+            menu_order.price += int(menu.price)
 
-    menu_order.save()
+            menu_order.save()
 
     if menu_order.number <= 0:
         menu_order.delete()
@@ -164,14 +154,13 @@ def update_item(request):
 
 
 def cart(request):
-    data = MenuOrder.objects.filter(order__user__device=str(request.COOKIES["device"])).order_by("-id")
+    data = MenuOrder.objects.filter(order__user__username=str(request.user)).order_by("-id")
 
     result = 0
+    for d in data:
+        result += d.price
 
     if data:
-        for d in data:
-            result += d.price
-
         order = Order.objects.get(id=data[0].order.id)
         order.total_price = result
         order.save()
@@ -186,16 +175,31 @@ def delete_food_order(request, id):
 
 def update_cart(request):
     data = json.loads(request.body)
+
     foodId = data["foodId"]
     number = data["number"]
-    # customer = request.user
-    menu_order = MenuOrder.objects.get(id=foodId)
-    menuId = menu_order.menu.id
-    menu = Menu.objects.get(id=menuId)
 
-    if int(number) <= menu.inventory:
-        menu_order.number = int(number)
+    menu_order = MenuOrder.objects.get(id=foodId)
+    menu_order.number = number
+
+    if int(menu_order.number) < menu_order.menu.inventory:
+        menuId = menu_order.menu.id
+        menu = Menu.objects.get(id=menuId)
+
         menu_order.price = menu.price * int(number)
         menu_order.save()
 
     return JsonResponse("It was added", safe=False)
+
+
+class SearchResultsView(ListView):
+    model = Food
+    template_name = 'restaurant/food_search_results.html'
+    context_object_name = 'data'
+
+    def get_queryset(self):
+        query = self.request.GET.get('search')
+        if query is not None:
+            return Food.objects.filter(name__icontains=query)
+        else:
+            return Food.objects.none()

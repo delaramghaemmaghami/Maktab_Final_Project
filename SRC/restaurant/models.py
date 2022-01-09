@@ -128,8 +128,8 @@ class MenuOrder(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name="menu_rel")
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_rel")
 
-    number = models.PositiveIntegerField(validators=[MinValueValidator(1)], default=0)
-    price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=10, decimal_places=1, default=0)
+    number = models.PositiveIntegerField(validators=[MinValueValidator(0)], default=0)
+    price = models.DecimalField(validators=[MinValueValidator(0.0)], max_digits=100, decimal_places=1, default=0)
 
     def __str__(self):
         return f"{self.menu} | {self.order}"

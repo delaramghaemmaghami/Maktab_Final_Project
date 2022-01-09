@@ -29,7 +29,7 @@ urlpatterns = [
 
     path("meal_category_foods_list/<int:meal_category_id>", meal_category_foods_list, name="meal_category_foods_list"),
     path("restaurant-branches-list/<int:restaurant_id>", restaurant_branches_list, name="restaurant_branches_list"),
-    path("food-detail/<int:pk>/", FoodDetail.as_view(), name="food-detail"),
+    path("food-detail/<int:id>/", food_detail, name="food-detail"),
     path("branch-detail/<int:id>/", branch_detail, name="branch-detail"),
 
     path("admin-panel/", AdminPanel.as_view(), name="admin_panel"),
@@ -43,4 +43,6 @@ urlpatterns = [
     path("cart/", cart, name="cart"),
     path("delete/<int:id>/", delete_food_order, name="delete"),
     path("cart-update/", update_cart, name="cart_update"),
+
+    path("search", SearchResultsView.as_view(), name='search_results'),
 ]

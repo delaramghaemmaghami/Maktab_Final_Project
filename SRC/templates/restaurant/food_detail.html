@@ -49,6 +49,29 @@
 			</div>
 		</div>
 		<br>
+		<div class="row">
+			{% if data %}
+				{% for cat in data %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow text-center">
+						  <div class="card-body">
+							<h6 class="card-text"><a href="/branch-detail/{{cat.id}}">{{cat.name}}</a></h6>
+							<hr>
+                            <h6 class="card-text">Opening Date: {{cat.created_at_jalali}}</h6>
+                            <h6 class="card-text">
+								{% if cat.is_main %}
+									Main Branch
+								{% else %}
+								  <br>
+								{% endif %}
+							</h6>
+						  </div>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+		<br>
 		<h4>DESCRIPTION</h4>
 		<p>{{object.description}}</p>
 	</main>

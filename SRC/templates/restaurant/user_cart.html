@@ -14,46 +14,37 @@
 <main class="container my-4">
 	<br>
 	<br>
-	{% if messages %}
-		<ul class="messages">
-			{% for message in messages %}
-				<p class="alert-danger">{{ message }}</p>
-			{% endfor %}
-		</ul>
-	{% endif %}
 	<h3 class="my-4 border-bottom pb-1">CART</h3>
 	{% if data %}
-	<table class="table table-bordered" style="border: 3px solid black">
+	<table class="table table-bordered">
 		<thead>
 			<tr>
-				<th style="border: 3px solid black">Food</th>
-				<th style="border: 3px solid black">Branch</th>
-				<th style="border: 3px solid black">Quantity</th>
-				<th style="border: 3px solid black">Price</th>
-				<th style="border: 3px solid black">Total</th>
+				<th>Food</th>
+				<th>Quantity</th>
+				<th>Price</th>
+				<th>Total</th>
 			</tr>
 		</thead>
-		<tbody style="border: 3px solid black">
+		<tbody>
 			{% for mo in data %}
 			<tr>
-				<td style="border: 3px solid black">
+				<td>
 					<p><a href="">{{mo.menu.food.name}}</a></p>
 					<img style="width: 100px; height: 100px" src="{{mo.menu.food.image.url}}" alt="">
 				</td>
-				<td style="border: 3px solid black">{{mo.order.branch.name}}</td>
-				<td style="border: 3px solid black">
+				<td>
 					<input class="number" id="number-input" for="mo-number" type="number" value="{{mo.number}}"
-						   style="vertical-align: bottom;" min="1"/>
+						   style="vertical-align: bottom;" />
 					<button id="mo-number" class="btn btn-sm btn-primary update-food" value="{{mo.id}}">
 						update
 					</button>
 					<p><a class="btn btn-sm btn-danger" href="/delete/{{mo.id}}">Delete</a></p>
-				<td style="border: 3px solid black">{{mo.menu.price}}</td>
-				<td style="border: 3px solid black">{{mo.price}}</td>
+				<td>{{mo.menu.price}}</td>
+				<td>{{mo.price}}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
-		<tfoot style="border: 3px solid black">
+		<tfoot>
 			<tr>
 				<td colspan="2"></td>
 				<th>Total</th>
