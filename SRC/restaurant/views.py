@@ -103,7 +103,6 @@ def restaurant_branches_list(request, restaurant_id):
 def food_detail(request, id):
     food = Food.objects.get(id=id)
     data = Branch.objects.filter(branch_rel__food=food)
-    print(data)
     return render(request, "restaurant/food_detail.html", {"object": food, "data": data})
 
 

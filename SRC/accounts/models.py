@@ -15,7 +15,7 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
-    user_address = models.ManyToManyField(UserAddress)
+    user_address = models.ForeignKey(UserAddress, on_delete=models.CASCADE, null=True)
 
 
 class Customer(CustomUser):

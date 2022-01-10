@@ -22,13 +22,13 @@ class CustomerCreationForm(UserCreationForm):
         user.first_name = self.cleaned_data.get("first_name")
         user.last_name = self.cleaned_data.get("last_name")
         user.email = self.cleaned_data.get("email")
-        user.save()
 
         address = UserAddress.objects.create(city=self.cleaned_data.get("city"),
                                              address=self.cleaned_data.get("address"),
                                              zip_code=self.cleaned_data.get("zip_code"))
 
-        user.user_address.add(address)
+        user.user_address = address
+        user.save()
 
         return user
 
@@ -66,13 +66,13 @@ class StaffCreationForm(UserCreationForm):
         user.last_name = self.cleaned_data.get("last_name")
         user.email = self.cleaned_data.get("email")
         user.is_staff = True
-        user.save()
 
         address = UserAddress.objects.create(city=self.cleaned_data.get("city"),
                                              address=self.cleaned_data.get("address"),
                                              zip_code=self.cleaned_data.get("zip_code"))
 
-        user.user_address.add(address)
+        user.user_address = address
+        user.save()
 
         return user
 
