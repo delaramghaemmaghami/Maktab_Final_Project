@@ -1,4 +1,5 @@
 import json
+from itertools import chain
 
 import accounts.mixins
 from django.db.models import Q, Sum
@@ -192,14 +193,31 @@ def update_cart(request):
     return JsonResponse("It was added", safe=False)
 
 
+# Search for foods & restaurants
 class SearchResultsView(ListView):
     model = Food
     template_name = 'restaurant/food_search_results.html'
     context_object_name = 'data'
 
+    # search foods
     def get_queryset(self):
         query = self.request.GET.get('search')
         if query is not None:
             return Food.objects.filter(name__icontains=query)
         else:
             return Food.objects.none()
+
+    # search restaurants
+    def get_context_data(self, **kwargs):
+        query = self.request.GET.get('search')
+        context = super(SearchResultsView, self).get_context_data(**kwargs)
+        if query is not None:
+            filtered_restaurants = Restaurant.objects.filter(name__icontains=query)
+        else:
+            filtered_restaurants = Restaurant.objects.none()
+
+        context.update({
+            'restaurants_list': filtered_restaurants
+        })
+        print(context)
+        return context

@@ -42,5 +42,20 @@
 				{% endfor %}
 			{% endif %}
 		</div>
+		<div class="row">
+			{% if restaurants_list %}
+				{% for restaurant in restaurants_list %}
+					<div class="col-md-3 mb-4">
+						<div class="card shadow text-center">
+						  <div class="card-body">
+							<h6 class="card-text"><a href="/restaurant-branches-list/{{restaurant.id}}">
+								{{restaurant.name}}
+							</a></h6>
+						  </div>
+						</div>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
 	</main>
 {% endblock content %}

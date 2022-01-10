@@ -3,11 +3,35 @@ import jdatetime
 
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Q
 from django.utils.safestring import mark_safe
+
+
+# Restaurant manager
+class RestaurantManager(models.Manager):
+    def search(self, query=None):
+        qs = self.get_queryset()
+        if query is not None:
+            lookup = Q(name__contains=query)
+            qs = qs.filter(lookup).distinct()
+        return qs
+
+
+# Food manager
+class FoodManager(models.Manager):
+    def search(self, query=None):
+        qs = self.get_queryset()
+        if query is not None:
+            lookup = Q(name__contains=query)
+            qs = qs.filter(lookup).distinct()
+        return qs
 
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=100)
+
+    # manager
+    objects = RestaurantManager()
 
     def __str__(self):
         return self.name
@@ -69,6 +93,9 @@ class Food(models.Model):
 
     meal_category = models.ManyToManyField(MealCategory, related_name="meal")
     food_restaurant_category = models.ManyToManyField(FoodRestaurantCategory, related_name="food_cat")
+
+    # manager
+    objects = FoodManager()
 
     def meal_categories(self):
         return "\n ,".join([meal.name for meal in self.meal_category.all()])
