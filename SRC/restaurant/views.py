@@ -1,7 +1,7 @@
 import json
-from itertools import chain
-
 import accounts.mixins
+
+from django.contrib import messages
 from django.db.models import Q, Sum
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -137,8 +137,13 @@ def update_item(request):
 
     menu_orders = MenuOrder.objects.filter(order__user__username=str(request.user)).order_by("-id")
     mo = menu_orders[0].order.branch.name
-    x = MenuOrder.objects.filter(Q(order__user__username=str(request.user)) & ~Q(order__branch__name=mo)).delete()
-    y = Order.objects.filter(Q(user__username=str(request.user)) & ~Q(branch__name=mo)).delete()
+
+    # customer can't order from different branches otherwise a message will disappear
+    x = MenuOrder.objects.filter(Q(order__user__username=str(request.user)) & ~Q(order__branch__name=mo))
+    if x:
+        x.delete()
+        y = Order.objects.filter(Q(user__username=str(request.user)) & ~Q(branch__name=mo)).delete()
+        messages.add_message(request, messages.WARNING, "You can't order from different branches")
 
     if action == "add":
         if menu_order.number < menu_order.menu.inventory:
@@ -188,6 +193,9 @@ def update_cart(request):
 
         menu_order.price = menu.price * int(number)
         menu_order.save()
+
+    else:
+        messages.add_message(request, messages.WARNING, "You can't order more than branch inventory!")
 
     return JsonResponse("It was added", safe=False)
 

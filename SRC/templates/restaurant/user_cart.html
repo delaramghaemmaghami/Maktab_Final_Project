@@ -15,6 +15,11 @@
 	<br>
 	<br>
 	<h3 class="my-4 border-bottom pb-1">CART</h3>
+	{% if messages %}
+		{% for message in messages %}
+			<p id="messages" class="text-danger bg-dark">{{message}}</p>
+		{% endfor %}
+	{% endif %}
 	{% if data %}
 	<table class="table table-striped" style="background-color: lightgoldenrodyellow">
 	  <thead>

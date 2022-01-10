@@ -15,6 +15,11 @@
 	<br>
 	<main class="container my-4">
 		<h1>Branch Detail</h1>
+		{% if messages %}
+			{% for message in messages %}
+				<p id="messages" class="text-danger bg-dark">{{message}}</p>
+			{% endfor %}
+		{% endif %}
 		<hr>
 		<div>
 			<a href="{% url 'Restaurants_list' %}" class="btn btn-warning" role="button">Back</a>
